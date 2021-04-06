@@ -1,0 +1,22 @@
+{
+  "name": "compound-protocol-lite",
+  "version": "1.0.0",
+  "description": "Barebones Compound Protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jared Flatow <jared@compound.finance>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^2.1.1",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.3.0",
+    "ethers": "^5.1.0",
+    "hardhat": "^2.1.2",
+    "node-fetch": "^2.6.1"
+  }
+}
