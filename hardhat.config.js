@@ -21,7 +21,7 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: 'https://mainnet-eth.compound.finance'
+        url: 'https://mainnet-eth.compound.finance/@12466889'
       }
     },
 
@@ -34,7 +34,7 @@ module.exports = {
   },
 
   solidity: {
-    version: '0.8.3',
+    version: '0.5.16',
     settings: {
       optimizer: {
         enabled: true,
