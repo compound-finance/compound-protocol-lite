@@ -34,7 +34,7 @@ extendEnvironment(async (hre) => {
   hre.repl = new ReplEvaluator(hre);
 });
 
-const cmd = task("exec", "send message to world");
+const cmd = task("repl", "send message to repl/world");
 cmd.addVariadicPositionalParam("cmd", "string to evaluate", ["Print", "test"]);
 cmd.setAction(async (args, hre) => {
   hre.world = await setup_repl(hre);

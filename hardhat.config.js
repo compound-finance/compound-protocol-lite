@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-etherscan");
 require("@nomiclabs/hardhat-waffle");
+require("./plugin/dist/index");
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -21,26 +22,24 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: 'https://mainnet-eth.compound.finance/@12466889'
-      }
+        url: "https://mainnet-eth.compound.finance",
+        blockNumber: 12466889,
+      },
     },
 
     mainnet: {
-      url: 'https://mainnet-eth.compound.finance',
-      accounts: [
-
-      ]
-    }
+      url: "https://mainnet-eth.compound.finance",
+      accounts: [],
+    },
   },
 
   solidity: {
-    version: '0.5.16',
+    version: "0.5.16",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200
-      }
-    }
-  }
+        runs: 200,
+      },
+    },
+  },
 };
-
