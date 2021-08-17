@@ -4,7 +4,9 @@
   "description": "Barebones Compound Protocol",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "console": "cd plugin && npx tsc && cd .. && npx hardhat console",
+    "plugin": "cd plugin && npx tsc"
   },
   "keywords": [],
   "author": "Jared Flatow <jared@compound.finance>",
