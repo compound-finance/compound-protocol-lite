@@ -2,6 +2,34 @@
 
 Experimental [Hardhat](https://hardhat.org/) repo.
 
+## how to use
+
+npm run console
+
+then do
+
+hre.repl.line(`Command`)
+
+or
+
+
+hre.repl.lines(`
+
+  Command
+
+  Command2
+
+  Command3
+
+  Etc
+
+  Etc
+
+  `)
+
+very incomplete
+
+
 ## Scripts
 
 Simulate (see the `forking` config in `hardhat.config.js`):
