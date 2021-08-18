@@ -4,6 +4,15 @@ Experimental [Hardhat](https://hardhat.org/) repo.
 
 ## how to use
 
+npm run build
+npx hardhat repl Print \"Hello World\"
+
+
+
+
+
+
+
 npm run console
 
 then do
