@@ -73,10 +73,12 @@ export function encodeParameters(
     return "0x0";
   }
   const [_, __, fnInputs] = <[string, string, string]>(<unknown>res);
-  return world.hre.ethers.utils.defaultAbiCoder.encode(
+  const calldata = world.hre.ethers.utils.defaultAbiCoder.encode(
     fnInputs.split(","),
     fnParams
   );
+
+  return calldata;
 }
 
 export function decodeParameters(

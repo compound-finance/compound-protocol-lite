@@ -21,7 +21,6 @@ export async function getProposalId(
 ): Promise<number> {
   if (typeof proposalIdent === "string" && proposalIdent === "LastProposal") {
     const proposalcount = await governor.callStatic.proposalCount();
-    console.log(proposalcount.toNumber());
     return proposalcount.toNumber();
   } else if (
     Array.isArray(proposalIdent) &&

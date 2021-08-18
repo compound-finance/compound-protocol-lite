@@ -198,6 +198,7 @@ export async function storeAndSaveContract<T>(
   extraData: ExtraData[]
 ): Promise<World> {
   extraData.push({ index: ["Contracts", name], data: contract.address });
+
   if (contract.constructorAbi) {
     extraData.push({
       index: ["Constructors", name],
@@ -211,7 +212,6 @@ export async function storeAndSaveContract<T>(
     });
   }
 
-  world = storeContract(world, contract, name, extraData);
   world = await saveContract(world, contract, name, extraData);
 
   return world;

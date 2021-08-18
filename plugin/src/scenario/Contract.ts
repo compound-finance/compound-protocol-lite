@@ -54,8 +54,8 @@ class ContractStub {
         (<unknown>contract) as T,
         receipt,
         null,
-        contract as ethers.Contract,
-        (factory.getDeployTransaction(args).nonce = null),
+        contract,
+        null,
         null,
         null
       );

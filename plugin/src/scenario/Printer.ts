@@ -73,9 +73,9 @@ export class ConsolePrinter implements Printer {
   }
 
   printAction(action: Action<any>): void {
-    if (this.verbose) {
-      console.log(`Action: ${action.log}`);
-    }
+    // if (this.verbose) {
+    console.log(`Action: ${action.log}`);
+    //   }
   }
 }
 

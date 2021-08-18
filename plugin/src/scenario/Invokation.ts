@@ -257,7 +257,6 @@ export async function invoke<T>(
   }
 
   const final = { ...txn, ...invokationOpts };
-  let error: null | Error = null;
   try {
     await world.hre.network.provider.request({
       method: "hardhat_impersonateAccount",
@@ -265,9 +264,9 @@ export async function invoke<T>(
     });
     const signer = await world.hre.ethers.getSigner(from);
     try {
-      const raw = await signer.call(final);
+      // const raw = await signer.call(final);
     } catch (err) {
-      error = new InvokationError(err);
+      //error = new InvokationError(err);
     }
     let result: ethers.providers.TransactionResponse | null;
     if (world.dryRun) {
@@ -290,12 +289,17 @@ export async function invoke<T>(
       params: [from],
     });
 
+    console.log("al;l logs", receipt.logs);
     //  if (world.settings.printTxLogs) {
     const eventLogs = Object.values((receipt && receipt.logs) || {});
 
-    for (const tx of eventLogs) {
-      const parsedTxn = contract.interface.parseLog(tx);
-      console.log("EMITTED EVENTS:   ", parsedTxn);
+    for (const log of eventLogs) {
+      try {
+        const parsedTxn = contract.interface.parseLog(log);
+        console.log("EMITTED EVENTS:   ", parsedTxn);
+      } catch (e) {
+        console.log("EMITTED EVENTS:   ", log);
+      }
     }
     //  }
 
