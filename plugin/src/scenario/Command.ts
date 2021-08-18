@@ -109,97 +109,81 @@ export abstract class Expression<Args> {
   async getArgs(world: World, event: Event): Promise<Args> {
     const [_name, eventArgs] = this.getNameArgs(event);
 
-    let initialAcc = <{ currArgs: Args; currEvents: Event }>{
-      currArgs: <Args>{},
-      currEvents: eventArgs,
-    };
+    let initialAcc = <{ currArgs: Args; currEvents: Event }>{};
 
-    const { currArgs: args, currEvents: restEvent } = await this.args.reduce(
-      async (acc, arg) => {
-        let { currArgs, currEvents } = await acc;
-        let val: any;
-        let restEventArgs: Event;
+    let currArgs = <Args>{};
+    let currEvents = eventArgs;
 
-        if (arg.nullable && currEvents.length === 0) {
-          // Note this is zero-length string or zero-length array
-          val = new NothingV();
-          restEventArgs = currEvents;
-        } else if (arg.variadic) {
-          if (arg.mapped) {
-            // If mapped, mapped the function over each event arg
-            val = await Promise.all(
-              currEvents.map((event) => arg.getter(world, event))
-            );
-          } else {
-            val = await arg.getter(world, currEvents);
-          }
-          restEventArgs = [];
-        } else if (arg.implicit) {
-          val = await arg.getter(world);
-          restEventArgs = currEvents;
+    for (const arg of this.args) {
+      let val: any;
+      let restEventArgs: Event;
+
+      if (arg.nullable && currEvents.length === 0) {
+        // Note this is zero-length string or zero-length array
+        val = new NothingV();
+        restEventArgs = currEvents;
+      } else if (arg.variadic) {
+        if (arg.mapped) {
+          // If mapped, mapped the function over each event arg
+          val = await Promise.all(
+            currEvents.map((event) => arg.getter(world, event))
+          );
         } else {
-          let eventArg;
+          val = await arg.getter(world, currEvents);
+        }
+        restEventArgs = [];
+      } else if (arg.implicit) {
+        val = await arg.getter(world);
+        restEventArgs = currEvents;
+      } else {
+        let eventArg;
 
-          [eventArg, ...restEventArgs] = currEvents;
+        [eventArg, ...restEventArgs] = currEvents;
 
-          if (eventArg === undefined) {
-            if (arg.defaultValue !== undefined) {
-              val = arg.defaultValue;
-            } else {
-              throw new Error(
-                `Missing argument ${arg.name} when processing ${this.name}`
-              );
-            }
+        if (eventArg === undefined) {
+          if (arg.defaultValue !== undefined) {
+            val = arg.defaultValue;
           } else {
-            try {
-              if (arg.mapped) {
-                val = await Promise.all(
-                  mustArray<Event>(eventArg).map((el) => arg.getter(world, el))
-                );
-              } else {
-                val = await arg.getter(world, eventArg);
-              }
-            } catch (err) {
-              if (arg.rescue) {
-                // Rescue is meant to allow Gate to work for checks that
-                // fail due to the missing components, e.g.:
-                // `Gate (CToken Eth Address) (... deploy cToken)`
-                // could be used to deploy a cToken if it doesn't exist, but
-                // since there is no CToken, that check would raise (when we'd
-                // hope it just returns null). So here, we allow our code to rescue
-                // errors and recover, but we need to be smarter about catching specific
-                // errors instead of all errors. For now, to assist debugging, we may print
-                // any error that comes up, even if it was intended.
-                // world.printer.printError(err);
-
-                val = arg.rescue;
-              } else {
-                throw err;
-              }
+            throw new Error(
+              `Missing argument ${arg.name} when processing ${this.name}`
+            );
+          }
+        } else {
+          try {
+            if (arg.mapped) {
+              val = await Promise.all(
+                mustArray<Event>(eventArg).map((el) => arg.getter(world, el))
+              );
+            } else {
+              val = await arg.getter(world, eventArg);
+            }
+          } catch (err) {
+            if (arg.rescue) {
+              val = arg.rescue;
+            } else {
+              throw err;
             }
           }
         }
+      }
 
-        let newArgs = {
-          ...currArgs,
-          [arg.name]: val,
-        };
+      let newArgs = {
+        ...currArgs,
+        [arg.name]: val,
+      };
 
-        return {
-          currArgs: newArgs,
-          currEvents: restEventArgs,
-        };
-      },
-      Promise.resolve(initialAcc)
-    );
-
-    if (restEvent.length !== 0) {
-      throw new Error(
-        `Found extra args: ${restEvent.toString()} when processing ${this.name}`
-      );
+      currArgs = newArgs;
+      currEvents = restEventArgs;
     }
 
-    return args;
+    if (currEvents.length !== 0) {
+      throw new Error(
+        `Found extra args: ${currEvents.toString()} when processing ${
+          this.name
+        }`
+      );
+    }
+    return currArgs;
   }
 
   static cleanDoc(doc: string): string {
@@ -273,7 +257,8 @@ export class Fetcher<Args, Ret> extends Expression<Args> {
   }
 
   async fetch(world: World, event: Event): Promise<Ret> {
-    let args = await this.getArgs(world, event);
+    let promise = this.getArgs(world, event);
+    let args = await promise;
     return await this.fetcher(world, args);
   }
 }
@@ -308,5 +293,6 @@ export async function getFetcherValue<Args, Ret>(
     );
   }
 
-  return matchingFetcher.fetch(world, event);
+  const solution = await matchingFetcher.fetch(world, event);
+  return solution;
 }

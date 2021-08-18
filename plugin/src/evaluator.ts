@@ -10,18 +10,19 @@ export class ReplEvaluator {
   line = async (x: string) => {
     for (const command of x.split("\n")) {
       try {
-        evaluate_repl(this.hre.world, command, this.hre);
+        await evaluate_repl(this.hre.world, command, this.hre.macros);
       } catch (e) {
         console.log(e);
         return;
       }
     }
+    return;
   };
 
   lines = async (x: Array<string>) => {
     for (const command of x) {
       try {
-        evaluate_repl(this.hre.world, command, this.hre);
+        evaluate_repl(this.hre.world, command, this.hre.macros);
       } catch (e) {
         console.log(e);
         return;

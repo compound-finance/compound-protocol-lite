@@ -93,7 +93,8 @@ function getSigFigs(value) {
 }
 
 export async function getEventV(world: World, event: Event): Promise<EventV> {
-  return new EventV(event);
+  const eventv = new EventV(event);
+  return eventv;
 }
 
 // TODO: We may want to handle simple values -> complex values at the parser level
@@ -397,7 +398,9 @@ const fetchers = [
     `,
     "String",
     [new Arg("str", getEventV)],
-    async (world, { str }) => getStringV(world, str.val)
+    async (world, { str }) => {
+      return getStringV(world, str.val);
+    }
   ),
 
   new Fetcher<{ amt: EventV }, NumberV>(
@@ -547,10 +550,11 @@ const fetchers = [
           let isListed = areEqual(val, 1);
           let collateralFactorKey =
             "0x" + toBN(newKey).add(toBN(1)).toString(16);
-          let collateralFactorStr = await world.hre.ethers.provider.getStorageAt(
-            addr.val,
-            collateralFactorKey
-          );
+          let collateralFactorStr =
+            await world.hre.ethers.provider.getStorageAt(
+              addr.val,
+              collateralFactorKey
+            );
           let collateralFactor = toBN(collateralFactorStr);
           let userMarketBaseKey = padLeft(
             toBN(newKey).add(toBN(2)).toString(16),
@@ -1122,18 +1126,24 @@ export async function getFetchers(world: World) {
     return { world, fetchers: world.fetchers };
   }
 
-  let allFetchers = fetchers.concat(
-    await Promise.all(
-      contractFetchers.map(({ contract, implicit }) => {
-        return buildContractFetcher(world, contract, implicit);
-      })
-    )
-  );
+  let allFetchers = [];
+  const results = [];
+  for (const { contract, implicit } of contractFetchers) {
+    const single = await buildContractFetcher(world, contract, implicit);
+    results.push(single);
+  }
+  allFetchers = fetchers.concat(results);
 
   return { world: world.set("fetchers", allFetchers), fetchers: allFetchers };
 }
 
 export async function getCoreValue(world: World, event: Event): Promise<Value> {
   let { world: nextWorld, fetchers } = await getFetchers(world);
-  return await getFetcherValue<any, any>("Core", fetchers, nextWorld, event);
+  const val = await getFetcherValue<any, any>(
+    "Core",
+    fetchers,
+    nextWorld,
+    event
+  );
+  return val;
 }

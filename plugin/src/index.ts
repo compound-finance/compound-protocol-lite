@@ -30,14 +30,15 @@ extendConfig(
 
 extendEnvironment(async (hre) => {
   // create the world
-  hre.world = await setup_repl(hre);
-  hre.repl = new ReplEvaluator(hre);
+  // hre.world = await setup_repl(hre);
+  //hre.repl = new ReplEvaluator(hre);
+  const accounts = await hre.ethers.provider.listAccounts();
 });
 
-const cmd = task("repl", "send message to repl/world");
-cmd.addVariadicPositionalParam("cmd", "string to evaluate", ["Print", "test"]);
-cmd.setAction(async (args, hre) => {
-  hre.world = await setup_repl(hre);
-  hre.repl = new ReplEvaluator(hre);
-  hre.repl.line(args.cmd.join(" "));
-});
+task("repl", "send message to repl/world")
+  .addVariadicPositionalParam("cmd", "string to evaluate", ["Print", "test"])
+  .setAction(async (args, hre) => {
+    hre.world = await setup_repl(hre);
+    hre.repl = new ReplEvaluator(hre);
+    await hre.repl.line(args.cmd.join(" "));
+  });

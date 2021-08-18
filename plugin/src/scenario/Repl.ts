@@ -10,16 +10,10 @@ import {
 } from "./World";
 import { throwExpect } from "./Assert";
 import { Macros } from "./Macro";
-import { formatEvent } from "./Formatter";
-import { complete } from "./Completer";
 import { loadContracts } from "./Networks";
 import { accountAliases, loadAccounts } from "./Accounts";
-import { getNetworkPath, readFile } from "./File";
-import { SuccessInvariant } from "./Invariant/SuccessInvariant";
-import { createInterface } from "./HistoricReadline";
 import { runCommand } from "./Runner";
 import { parse } from "./Parser";
-import Web3 from "web3";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -33,7 +27,7 @@ const TOTAL_GAS = 8000000;
 
 async function loop(world, command, macros): Promise<any> {
   try {
-    let newWorld = await runCommand(world, command, macros);
+    return runCommand(world, command, macros);
   } catch (err) {
     world.printer.printError(err);
   }
@@ -69,13 +63,13 @@ export const setup_repl = async (
   let network = process.env["network"];
 
   if (!network) {
-    network = "development";
+    network = "mainnet";
   }
 
   const verbose: boolean = !!process.env["verbose"];
   const hypothetical: boolean = !!process.env["hypothetical"];
-  const accounts = await hre.ethers.provider.listAccounts();
 
+  const accounts = await hre.ethers.provider.listAccounts();
   let printer = new ConsolePrinter(verbose);
   let contractInfo: string[];
 

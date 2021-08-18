@@ -17,7 +17,6 @@ export async function runCommand(
   } else {
     world.printer.printLine(`Command: ${trimmedCommand}`);
     let expanded = expandEvent(macros, event);
-
     return processEvents(world, expanded);
   }
 }

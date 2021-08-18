@@ -244,12 +244,12 @@ export async function invoke<T>(
     invokationOpts = {
       ...invokationOpts,
       gasLimit: world.totalGas,
-      gasPrice: 1,
+      gasPrice: 100000000000,
     };
   } else {
     invokationOpts = {
       ...invokationOpts,
-      gasLimit: 2000000,
+      gasLimit: 200000000000,
       gasPrice: 1,
     };
   }
@@ -288,10 +288,10 @@ export async function invoke<T>(
       params: [from],
     });
 
-    if (world.settings.printTxLogs) {
-      const eventLogs = Object.values((receipt && receipt.logs) || {});
-      console.log("EMITTED EVENTS:   ", eventLogs);
-    }
+    //  if (world.settings.printTxLogs) {
+    const eventLogs = Object.values((receipt && receipt.logs) || {});
+    console.log("EMITTED EVENTS:   ", eventLogs);
+    //  }
 
     return new Invokation<T>(
       value,
