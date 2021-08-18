@@ -26,11 +26,11 @@ async function genGovernor(
   from: string,
   params: Event
 ): Promise<World> {
-  let { world: nextWorld, governor, govData } = await buildGovernor(
-    world,
-    from,
-    params
-  );
+  let {
+    world: nextWorld,
+    governor,
+    govData,
+  } = await buildGovernor(world, from, params);
   world = nextWorld;
 
   return addAction(
@@ -79,7 +79,7 @@ async function propose(
       calldatas,
       description
     ),
-    "populateTransaction"
+    "propose"
   );
   return addAction(
     world,

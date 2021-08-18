@@ -131,12 +131,14 @@ export class Invokation<T> {
   ) {
     this.value = value;
     this.receipt = receipt;
-    this.fragment = contract.interface.getFunction(name);
+    if (contract !== null && name != null) {
+      this.fragment = contract.interface.getFunction(name);
+    }
     this.contract = contract;
     this.error = error;
     this.errorReporter = errorReporter;
 
-    if (this.fragment !== null) {
+    if (this.contract !== null && this.fragment !== null && txn !== null) {
       const result = contract.interface.decodeFunctionData(
         this.fragment,
         txn.data
@@ -244,13 +246,13 @@ export async function invoke<T>(
     invokationOpts = {
       ...invokationOpts,
       gasLimit: world.totalGas,
-      gasPrice: 100000000000,
+      gasPrice: 1000000000,
     };
   } else {
     invokationOpts = {
       ...invokationOpts,
-      gasLimit: 200000000000,
-      gasPrice: 1,
+      gasLimit: 2000000000,
+      gasPrice: 1000000000,
     };
   }
 
@@ -290,7 +292,11 @@ export async function invoke<T>(
 
     //  if (world.settings.printTxLogs) {
     const eventLogs = Object.values((receipt && receipt.logs) || {});
-    console.log("EMITTED EVENTS:   ", eventLogs);
+
+    for (const tx of eventLogs) {
+      const parsedTxn = contract.interface.parseLog(tx);
+      console.log("EMITTED EVENTS:   ", parsedTxn);
+    }
     //  }
 
     return new Invokation<T>(
@@ -303,7 +309,6 @@ export async function invoke<T>(
       errorReporter
     );
   } catch (err) {
-    console.log("error invoking", err);
     if (errorReporter) {
       let decoded = getErrorCode(err.message);
 

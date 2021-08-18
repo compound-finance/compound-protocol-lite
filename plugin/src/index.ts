@@ -42,3 +42,12 @@ task("repl", "send message to repl/world")
     hre.repl = new ReplEvaluator(hre);
     await hre.repl.line(args.cmd.join(" "));
   });
+
+task("scen", "run scenario")
+  .addParam("file", "file to evaluate to evaluate")
+  .setAction(async (args, hre) => {
+    hre.world = await setup_repl(hre);
+    hre.repl = new ReplEvaluator(hre);
+    console.log(args.file);
+    await hre.repl.file(args.file);
+  });

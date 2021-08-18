@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { Event } from "./Event";
 import { World } from "./World";
 
@@ -99,12 +100,8 @@ export function decodeParameters(
 }
 
 export async function getCurrentBlockNumber(world: World): Promise<number> {
-  const { result: currentBlockNumber }: any = await sendRPC(
-    world,
-    "eth_blockNumber",
-    []
-  );
-  return parseInt(currentBlockNumber);
+  const result = await sendRPC(world, "eth_blockNumber", []);
+  return ethers.BigNumber.from(result).toNumber();
 }
 
 export function getCurrentTimestamp(): number {

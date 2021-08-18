@@ -27,6 +27,11 @@ const TOTAL_GAS = 8000000;
 
 async function loop(world, command, macros): Promise<any> {
   try {
+    if (command) {
+      if (command[0] == "#") {
+        return world;
+      }
+    }
     return runCommand(world, command, macros);
   } catch (err) {
     world.printer.printError(err);

@@ -45,6 +45,7 @@ export function proposalCommands(governor: Governor) {
           governor,
           proposalIdent.val
         );
+        console.log(proposalId);
         const invokation = await invoke(
           world,
           from,

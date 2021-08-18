@@ -488,7 +488,9 @@ export const commands: (View<any> | ((world: World) => Promise<View<any>>))[] =
       "MineBlock",
       [],
       async (world, {}) => {
+        const oldblock = await getCurrentBlockNumber(world);
         await sendRPC(world, "evm_mine", []);
+        const newblock = await getCurrentBlockNumber(world);
         return world;
       }
     ),

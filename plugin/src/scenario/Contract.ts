@@ -60,6 +60,7 @@ class ContractStub {
         null
       );
     } catch (err) {
+      console.log("invokation error", err);
       return new Invokation<T>(
         null,
         null,
@@ -88,7 +89,6 @@ export function getTestContract(name: string): ContractStub {
 }
 
 export function setContractName(name: string, contract: Contract): Contract {
-  contract.attach(name);
   return contract;
 }
 

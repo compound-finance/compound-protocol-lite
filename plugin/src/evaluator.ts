@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { evaluate_repl } from "./scenario/Repl";
+import fs from "fs";
 
 export class ReplEvaluator {
   hre: HardhatRuntimeEnvironment;
@@ -28,5 +29,10 @@ export class ReplEvaluator {
         return;
       }
     }
+  };
+
+  file = async (filename: string) => {
+    const data = fs.readFileSync(filename);
+    return this.line(data.toString());
   };
 }
