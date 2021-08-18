@@ -9,7 +9,6 @@ export async function runCommand(
   macros: Macros
 ): Promise<World> {
   const trimmedCommand = command.trim();
-
   const event = parse(trimmedCommand, { startRule: "step" });
 
   if (event === null) {

@@ -76,7 +76,15 @@ class ContractStub {
   async at<T>(world: World, address: string): Promise<T> {
     const artifact = await world.hre.artifacts.readArtifact(this.name);
 
-    return <T>(<unknown>new world.hre.ethers.Contract(address, artifact.abi));
+    return <T>(
+      (<unknown>(
+        new world.hre.ethers.Contract(
+          address,
+          artifact.abi,
+          world.hre.ethers.provider
+        )
+      ))
+    );
   }
 }
 

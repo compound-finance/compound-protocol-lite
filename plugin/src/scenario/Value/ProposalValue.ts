@@ -12,6 +12,7 @@ import {
 import { AddressV, BoolV, EventV, NumberV, StringV, Value } from "../Value";
 import { Arg, Fetcher, getFetcherValue } from "../Command";
 import { encodedNumber } from "../Encoding";
+import { BigNumber } from "ethers";
 
 export async function getProposalId(
   world: World,
@@ -19,7 +20,9 @@ export async function getProposalId(
   proposalIdent: Event
 ): Promise<number> {
   if (typeof proposalIdent === "string" && proposalIdent === "LastProposal") {
-    return (await governor.proposalCount()).toNumber();
+    const proposalcount = await governor.callStatic.proposalCount();
+    console.log(proposalcount.toNumber());
+    return proposalcount.toNumber();
   } else if (
     Array.isArray(proposalIdent) &&
     proposalIdent[0] === "ActiveProposal" &&

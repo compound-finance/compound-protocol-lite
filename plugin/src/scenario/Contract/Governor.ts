@@ -1,19 +1,20 @@
-import { Contract } from '../Contract';
-import { Callable, Sendable } from '../Invokation';
-import { encodedNumber } from '../Encoding';
+import { Contract } from "../Contract";
+import { Callable } from "../Invokation";
+import { encodedNumber } from "../Encoding";
+import { ethers } from "ethers";
 
 export interface Proposal {
-  id: number
-  proposer: string
-  eta: number
-  targets: string[]
-  values: number[]
-  signatures: string[]
-  calldatas: string[]
-  startBlock: number
-  endBlock: number
-  forVotes: number
-  againstVotes: number
+  id: number;
+  proposer: string;
+  eta: number;
+  targets: string[];
+  values: number[];
+  signatures: string[];
+  calldatas: string[];
+  startBlock: number;
+  endBlock: number;
+  forVotes: number;
+  againstVotes: number;
 }
 
 export const proposalStateEnums = {
@@ -24,30 +25,47 @@ export const proposalStateEnums = {
   4: "Succeeded",
   5: "Queued",
   6: "Expired",
-  7: "Executed"
+  7: "Executed",
+};
+
+export interface GovernorMethods<T> {
+  guardian(): Promise<T>;
+  propose(
+    targets: string[],
+    values: encodedNumber[],
+    signatures: string[],
+    calldatas: string[],
+    description: string
+  ): Promise<T>;
+  proposals(proposalId: number): Promise<Proposal>;
+  proposalCount(): Promise<T>;
+  latestProposalIds(proposer: string): Promise<T>;
+  getReceipt(
+    proposalId: number,
+    voter: string
+  ): Promise<{ hasVoted: boolean; support: boolean; votes: number }>;
+  castVote(proposalId: number, support: boolean): Promise<T>;
+  queue(proposalId: encodedNumber): Promise<T>;
+  execute(proposalId: encodedNumber): Promise<T>;
+  cancel(proposalId: encodedNumber): Promise<T>;
+  setBlockNumber(blockNumber: encodedNumber): Promise<T>;
+  setBlockTimestamp(blockTimestamp: encodedNumber): Promise<T>;
+  state(proposalId: encodedNumber): Promise<T>;
+  __queueSetTimelockPendingAdmin(
+    newPendingAdmin: string,
+    eta: encodedNumber
+  ): Promise<T>;
+  __executeSetTimelockPendingAdmin(
+    newPendingAdmin: string,
+    eta: encodedNumber
+  ): Promise<T>;
+  __acceptAdmin(): Promise<T>;
+  __abdicate(): Promise<T>;
 }
 
-export interface GovernorMethods {
-  guardian(): Callable<string>;
-  propose(targets: string[], values: encodedNumber[], signatures: string[], calldatas: string[], description: string): Sendable<void>
-  proposals(proposalId: number): Callable<Proposal>;
-  proposalCount(): Callable<number>;
-  latestProposalIds(proposer: string): Callable<number>;
-  getReceipt(proposalId: number, voter: string): Callable<{ hasVoted: boolean, support: boolean, votes: number }>;
-  castVote(proposalId: number, support: boolean): Sendable<void>;
-  queue(proposalId: encodedNumber): Sendable<void>;
-  execute(proposalId: encodedNumber): Sendable<void>;
-  cancel(proposalId: encodedNumber): Sendable<void>;
-  setBlockNumber(blockNumber: encodedNumber): Sendable<void>;
-  setBlockTimestamp(blockTimestamp: encodedNumber): Sendable<void>;
-  state(proposalId: encodedNumber): Callable<number>;
-  __queueSetTimelockPendingAdmin(newPendingAdmin: string, eta: encodedNumber): Sendable<void>;
-  __executeSetTimelockPendingAdmin(newPendingAdmin: string, eta: encodedNumber): Sendable<void>;
-  __acceptAdmin(): Sendable<void>;
-  __abdicate(): Sendable<void>;
-}
-
-export interface Governor extends Contract {
-  methods: GovernorMethods;
-  name: string;
-}
+export type Governor = Contract &
+  GovernorMethods<any> &
+  GovernorMethods<ethers.providers.TransactionResponse> & {
+    callStatic: GovernorMethods<any>;
+    estimateGas: GovernorMethods<ethers.BigNumber>;
+  };

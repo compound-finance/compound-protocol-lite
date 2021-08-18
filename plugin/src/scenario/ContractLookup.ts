@@ -64,7 +64,7 @@ export function getWorldContract<T>(world: World, indices: string[][]): T {
 }
 
 export function getWorldContractByAddress<T>(world: World, address: string): T {
-  const contract = world.contractIndex[address.toLowerCase()];
+  let contract = world.contractIndex[address.toLowerCase()];
 
   if (!contract) {
     throw new Error(
@@ -73,6 +73,7 @@ export function getWorldContractByAddress<T>(world: World, address: string): T {
       )}`
     );
   }
+  contract = contract.connect(world.hre.ethers.provider);
 
   return <T>(<unknown>contract);
 }

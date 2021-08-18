@@ -25,7 +25,8 @@ interface Erc20Methods<T> {
 }
 
 export type Erc20 = Contract &
-  Erc20Methods<ethers.providers.TransactionResponse> & {
+  Erc20Methods<ethers.providers.TransactionResponse> &
+  Erc20Methods<any> & {
     callStatic: Erc20Methods<any>;
     estimateGas: Erc20Methods<ethers.BigNumber>;
   };
