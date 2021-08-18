@@ -219,7 +219,7 @@ export function governorCommands() {
     ),
     new Command<{ governor: Governor; params: EventV }>(
       `
-        #### Proposal
+       #### Proposal
 
         * "Governor <Governor> Proposal <...proposalEvent>" - Returns information about a proposal
           * E.g. "Governor GovernorScenario Proposal LastProposal Vote For"

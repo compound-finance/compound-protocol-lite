@@ -40,12 +40,11 @@ export function proposalCommands(governor: Governor) {
       "Vote",
       [new Arg("proposalIdent", getEventV), new Arg("support", getEventV)],
       async (world, from, { proposalIdent, support }) => {
-        const proposalId = await getProposalId(
+        let proposalId = await getProposalId(
           world,
           governor,
           proposalIdent.val
         );
-        console.log(proposalId);
         const invokation = await invoke(
           world,
           from,
