@@ -19,14 +19,14 @@ async function main() {
   const [arr00Signer, otherSigner] = await initializeForkWithSigners(
     [
       "0x2B384212EDc04Ae8bB41738D05BA20E33277bf33",
-      "0xd5447a7aa223268398cf7c38c2c580622cc98772",
+      "0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8",
     ],
     13502148
   );
 
   // Example usage of CompoundLens
-  // const tx = await contracts["CompoundLens"].callStatic.cTokenMetadata(
-  //   contracts["cETH"].address
+  // const tx = await contracts.CompoundLens.callStatic.cTokenMetadata(
+  //   contracts.cETH.address
   // );
   // console.log(tx);
 
@@ -40,8 +40,15 @@ async function main() {
   // let cREP = new ethers.Contract("0x158079ee67fce2f58472a96584a73c7ab9ac95c1",cREPAbi,arr00Signer);
 
   // Create and deploy a new contract
-  // const Greeter = await ethers.getContractFactory("Greeter", arr00Signer);
-  // const greeter = await Greeter.deploy("Hello, Hardhat!");
+  // const lensFactory = await ethers.getContractFactory(
+  //   "CompoundLens",
+  //   otherSigner
+  // );
+  // const lens = await lensFactory.deploy();
+
+  // // Example usage of a new CompoundLens
+  // const tx = await lens.callStatic.cTokenMetadata(contracts.cETH.address);
+  // console.log(tx);
 }
 
 main().catch((error) => {
