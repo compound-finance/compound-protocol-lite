@@ -19,3 +19,7 @@ $ npx hardhat run scripts/post-prices.js --network mainnet
 ## Running Forking Simulation Scripts
 
 Modify the `main` function in `scripts/simulate.js` to simulate as needed. Make sure to set the block parameter in the `initializeForkWithSigners` function if necessary.
+
+```
+$ npx hardhat run scripts/simulate.js
+```
