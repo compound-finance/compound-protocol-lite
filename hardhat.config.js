@@ -21,26 +21,36 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: 'https://mainnet-eth.compound.finance'
-      }
+        url: "https://mainnet-eth.compound.finance",
+      },
     },
 
     mainnet: {
-      url: 'https://mainnet-eth.compound.finance',
-      accounts: [
-
-      ]
-    }
+      url: "https://mainnet-eth.compound.finance",
+      accounts: [],
+    },
   },
 
   solidity: {
-    version: '0.8.3',
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
-    }
-  }
+    compilers: [
+      {
+        version: "0.8.3",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.5.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    ],
+  },
 };
-
